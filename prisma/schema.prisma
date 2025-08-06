@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  Wallet      Wallet[]
+  sentTxs     Transaction[] @relation("Sender")
+  receivedTxs Transaction[] @relation("Recipient")
+}
+
+model Wallet {
+  id       String @id @default(uuid())
+  userId   String
+  balance  Float  @default(0.0)
+  currency String @default("NGN")
+  status   String @default("active")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  senderId    String
+  recipientId String
+  amount      Float
+  createdAt   DateTime @default(now())
+
+  sender    User @relation("Sender", fields: [senderId], references: [id])
+  recipient User @relation("Recipient", fields: [recipientId], references: [id])
+}

@@ -13,6 +13,10 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.use(cors({
+  origin: 'https://owodealajo.netlify.app'  // Replace with your Netlify frontend URL
+}));
+
 // ✅ Routes
 const authRoutes = require('./src/routes/authRoutes');
 const walletRoutes = require('./src/routes/walletRoutes');
